@@ -46,13 +46,13 @@ def display():
   buf.fill(0)
   buf.blit(picture, (dx, dy))
   surface.blit(buf, (0, 0))
-  pygame.display.update()
+  pygame.display.flip()
   time.sleep(SLEEP_SECONDS)
   if pygame.event.peek(pygame.KEYDOWN):
     sys.exit(0)
 
 
-surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
 info = pygame.display.Info()
 screen_width = info.current_w
 screen_height = info.current_h
