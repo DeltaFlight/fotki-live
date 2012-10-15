@@ -47,10 +47,16 @@ def display():
   buf.blit(picture, (dx, dy))
   surface.blit(buf, (0, 0))
   pygame.display.flip()
-  time.sleep(SLEEP_SECONDS)
-  if pygame.event.peek(pygame.KEYDOWN):
-    sys.exit(0)
 
+def maybeExit():
+  for i in xrange(0, SLEEP_SECONDS * 2):
+    if pygame.event.peek(pygame.KEYDOWN):
+      event = pygame.event.get(pygame.KEYDOWN)[0]
+      print event
+      if event.key == 27:
+        sys.exit(0)
+    pygame.event.get()
+    time.sleep(0.5)
 
 surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
 info = pygame.display.Info()
@@ -58,7 +64,13 @@ screen_width = info.current_w
 screen_height = info.current_h
 
 while True:
-  items = update()
-  for item in items:
-    download(item)
-    display()
+  try:
+    items = update()
+    for item in items:
+      download(item)
+      display()
+      maybeExit()
+  except urllib2.HTTPError, ex:
+    print ex
+    time.sleep(1)
+
