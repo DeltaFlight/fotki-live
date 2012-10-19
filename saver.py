@@ -9,6 +9,7 @@ import time
 import sys
 import urllib2
 from xml.dom import minidom
+import socket
 
 TMP = "/tmp/image.jpg"
 SLEEP_SECONDS = 2
@@ -71,6 +72,9 @@ while True:
       display()
       maybeExit()
   except urllib2.HTTPError, ex:
+    print ex
+    time.sleep(1)
+  except socket.error, ex:
     print ex
     time.sleep(1)
 
