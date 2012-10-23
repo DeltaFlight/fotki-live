@@ -49,7 +49,7 @@ def display():
   surface.blit(buf, (0, 0))
   pygame.display.flip()
 
-def maybeExit():
+def maybeExit(sleep = True):
   for i in xrange(0, SLEEP_SECONDS * 2):
     if pygame.event.peek(pygame.KEYDOWN):
       event = pygame.event.get(pygame.KEYDOWN)[0]
@@ -57,7 +57,8 @@ def maybeExit():
       if event.key == 27:
         sys.exit(0)
     pygame.event.get()
-    time.sleep(0.5)
+    if sleep:
+      time.sleep(0.5)
 
 surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
 info = pygame.display.Info()
@@ -66,6 +67,7 @@ screen_height = info.current_h
 
 while True:
   try:
+    maybeExit(False)
     items = update()
     for item in items:
       download(item)
