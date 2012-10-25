@@ -74,9 +74,9 @@ while True:
       display()
       maybeExit()
   except urllib2.HTTPError, ex:
-    print ex
+    print time.time(), ex
     time.sleep(1)
   except socket.error, ex:
-    print ex
+    print time.time(), ex
     time.sleep(1)
 
