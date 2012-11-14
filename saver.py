@@ -79,4 +79,6 @@ while True:
   except socket.error, ex:
     print time.time(), ex
     time.sleep(1)
+  except pygame.error, ex:
+    print time.time(), ex
 
