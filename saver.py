@@ -8,6 +8,7 @@ import pygame.transform
 import time
 import sys
 import urllib2
+import httplib
 from xml.dom import minidom
 import socket
 
@@ -15,12 +16,14 @@ TMP = "/tmp/image.jpg"
 SLEEP_SECONDS = 2
 
 def update():
+  log("update")
   src = urllib2.urlopen("http://fotki.yandex.ru/live/rss2")
   dom = minidom.parse(src)
   return dom.getElementsByTagName("item")
 
 
 def download(item):
+  log("download")
   urlEl = item.getElementsByTagName("media:content")[0]
   url = urlEl.attributes["url"].value
   url = url.replace("_XL", "_XXXL")
@@ -30,6 +33,7 @@ def download(item):
   out.close()
 
 def display():
+  log("display")
   picture = pygame.image.load(TMP)
   (width, height) = picture.get_size()
   ratioH = float(screen_height) / height
@@ -60,6 +64,9 @@ def maybeExit(sleep = True):
     if sleep:
       time.sleep(0.5)
 
+def log(msg):
+  print time.asctime(), msg
+
 surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
 info = pygame.display.Info()
 screen_width = info.current_w
@@ -74,11 +81,13 @@ while True:
       display()
       maybeExit()
   except urllib2.HTTPError, ex:
-    print time.time(), ex
+    log(ex)
     time.sleep(1)
   except socket.error, ex:
-    print time.time(), ex
+    log(ex)
     time.sleep(1)
   except pygame.error, ex:
-    print time.time(), ex
+    log(ex)
+  except httplib.HTTPException:
+    log(ex)
 
