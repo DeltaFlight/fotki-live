@@ -17,7 +17,7 @@ SLEEP_SECONDS = 2
 
 def update():
   log("update")
-  src = urllib2.urlopen("http://fotki.yandex.ru/live/rss2")
+  src = urllib2.urlopen("http://fotki.yandex.ru/live/rss2", timeout = 3)
   dom = minidom.parse(src)
   return dom.getElementsByTagName("item")
 
@@ -27,7 +27,7 @@ def download(item):
   urlEl = item.getElementsByTagName("media:content")[0]
   url = urlEl.attributes["url"].value
   url = url.replace("_XL", "_XXXL")
-  image = urllib2.urlopen(url)
+  image = urllib2.urlopen(url, timeout = 3)
   out = open(TMP, "wb")
   out.write(image.read())
   out.close()
@@ -81,6 +81,9 @@ while True:
       display()
       maybeExit()
   except urllib2.HTTPError, ex:
+    log(ex)
+    time.sleep(1)
+  except urllib2.URLError, ex:
     log(ex)
     time.sleep(1)
   except socket.error, ex:
